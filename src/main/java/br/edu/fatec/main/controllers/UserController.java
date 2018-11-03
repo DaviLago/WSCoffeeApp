@@ -1,6 +1,5 @@
 package br.edu.fatec.main.controllers;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +24,10 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping
-	public ResponseEntity<List<UserModel>> findAll() {
-		return new ResponseEntity<List<UserModel>>(userService.findAll(), HttpStatus.OK);
-	}
+//	@GetMapping
+//	public ResponseEntity<List<UserModel>> findAll() {
+//		return new ResponseEntity<List<UserModel>>(userService.findAll(), HttpStatus.OK);
+//	}
 
 	@GetMapping("/{userId}") 
     public ResponseEntity<UserModel> findById(@PathVariable String userId) {
@@ -37,14 +36,29 @@ public class UserController {
 	
 	@GetMapping("/auth/{email}/{password}")
     public ResponseEntity<UserModel> findByEmailAndPassword(@PathVariable String email, @PathVariable String password) {
+
+		email = email.trim();
+		
 		Optional<UserModel> user = userService.findByEmailAndPassword(email, password);
 		if(user.isPresent())
 			return new ResponseEntity<UserModel>(user.get(), HttpStatus.OK);
+		
 		return new ResponseEntity<UserModel>(HttpStatus.NOT_FOUND);
     }
 	
 	@PostMapping
 	public ResponseEntity<UserModel> save(@RequestBody UserModel user) {
+		if(user.getName() == null || user.getEmail() == null || user.getPassword() == null)
+			return new ResponseEntity<UserModel>(user, HttpStatus.BAD_REQUEST);
+		else if(user.getName().trim() == null || user.getEmail().trim() == null || user.getPassword().trim() == null)
+			return new ResponseEntity<UserModel>(user, HttpStatus.BAD_REQUEST);
+		
+		user.setName(user.getName().trim());
+		user.setEmail(user.getEmail().trim());
+		
+		if(userService.findByEmail(user.getEmail()).isPresent())
+			return new ResponseEntity<UserModel>(user, HttpStatus.CONFLICT);
+		
 		return new ResponseEntity<UserModel>(userService.save(user), HttpStatus.CREATED);
 	}
 	
