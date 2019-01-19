@@ -1,4 +1,4 @@
-package br.edu.fatec.main.controllers;
+package br.edu.fatec.main.controllers.core;
 
 import java.util.List;
 
@@ -30,27 +30,24 @@ public class UserAnnotationController {
 	
 	@GetMapping("/{userId}/annotation") 
     public ResponseEntity<List<AnnotationModel>> findByUserId(@PathVariable String userId) {
-		return new ResponseEntity<List<AnnotationModel>>(annotationService.findByUserId(userId), HttpStatus.OK);
+		return new ResponseEntity<>(annotationService.findByUserId(userId), HttpStatus.OK);
     }
 	
 	@PostMapping("/{userId}/annotation")
 	public ResponseEntity<AnnotationModel> save(@PathVariable String userId, @RequestBody AnnotationModel annotation) {
 		if(userService.findById(userId).isPresent())
 			return new ResponseEntity<AnnotationModel>(annotationService.save(annotation), HttpStatus.CREATED);
-		return new ResponseEntity<AnnotationModel>(new AnnotationModel(), HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@PutMapping("/{userId}/annotation/{annotationId}")
 	public ResponseEntity<AnnotationModel> update(@PathVariable String userId, @PathVariable String annotationId, @RequestBody AnnotationModel annotation) {
-		
 		if(annotationService.findByIdAndUserId(annotationId, userId).isPresent()) {
-			System.out.println("ok");
 			annotation.setId(annotationId);
 			annotationService.save(annotation);
-			return new ResponseEntity<AnnotationModel>(annotationService.save(annotation), HttpStatus.OK);
+			return new ResponseEntity<>(annotationService.save(annotation), HttpStatus.OK);
 		}
-		System.out.println("wrong");
-		return new ResponseEntity<AnnotationModel>(new AnnotationModel(), HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<AnnotationModel>(new AnnotationModel(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@DeleteMapping("/{userId}/annotation/{annotationId}")
@@ -59,7 +56,7 @@ public class UserAnnotationController {
 			annotationService.delete(annotationService.findById(annotationId).get());
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
 }

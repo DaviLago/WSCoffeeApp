@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import br.edu.fatec.main.model.AnnotationModel;
 
-public interface AnnotationRepository extends MongoRepository<AnnotationModel, String>{
+public interface AnnotationRepository extends MongoRepository<AnnotationModel, String> {
 
 	List<AnnotationModel> findByUserId(String userId);
 

@@ -1,4 +1,4 @@
-package br.edu.fatec.main.controllers;
+package br.edu.fatec.main.controllers.core;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
