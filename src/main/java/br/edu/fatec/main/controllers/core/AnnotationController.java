@@ -54,8 +54,10 @@ public class AnnotationController {
 	@PostMapping
 	public ResponseEntity<AnnotationModel> save(@RequestBody AnnotationModel annotation, HttpServletRequest request) {
 		SecurityPrincipal user = (SecurityPrincipal) request.getUserPrincipal();
-		if(userService.findById(user.getUser().getId()).isPresent())
+		if(userService.findById(user.getUser().getId()).isPresent()) {
+			annotation.setUser(user.getUser());
 			return new ResponseEntity<AnnotationModel>(annotationService.save(annotation), HttpStatus.CREATED);
+		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
