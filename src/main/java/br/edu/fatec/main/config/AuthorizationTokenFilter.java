@@ -24,20 +24,17 @@ public class AuthorizationTokenFilter extends OncePerRequestFilter {
 	Logger log = LoggerFactory.getLogger(AuthorizationTokenFilter.class);
 	
 	private AuthenticationTokenService authenticationTokenService;
-	private String cerberonTokenHeader;
+	private String tokenHeader;
 
 	public AuthorizationTokenFilter(String cerberonTokenHeader, AuthenticationTokenService authenticationTokenService) {
-		this.cerberonTokenHeader = cerberonTokenHeader;
+		this.tokenHeader = cerberonTokenHeader;
 		this.authenticationTokenService = authenticationTokenService;
-		log.info("Constructor Class AuthorizationTokenFilter %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-		log.info("Processing authentication for '{}' %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", request.getRequestURL());
-		
-		final String requestHeader = request.getHeader(this.cerberonTokenHeader);
+		final String requestHeader = request.getHeader(this.tokenHeader);
 		final String authToken;
 		final UserModel user;
 

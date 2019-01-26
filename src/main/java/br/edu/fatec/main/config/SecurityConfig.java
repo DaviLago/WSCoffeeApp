@@ -36,15 +36,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) {
-		//@formatter:off
     	auth
     		.authenticationProvider(authenticationProvider);
-    	//@formatter:on
 	}
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		//@formatter:off
     	httpSecurity
             .csrf().disable()
             .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
@@ -56,12 +53,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         AuthorizationTokenFilter authenticationTokenFilter = new AuthorizationTokenFilter(cerberonTokenHeader, authenticationTokenService);
         httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        //@formatter:on
 	}
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		//@formatter:off
         web
             .ignoring()
             .antMatchers(
@@ -69,19 +64,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/auth", "/auth/**"
             )
             .antMatchers(
-            			"/v2/api-docs", 
-            			"/configuration/ui", 
-            			"/swagger-resources/**", 
-            			"/configuration/security", 
-            			"/swagger-ui.html", 
-            			"/webjars/**",
-            			"/csrf",
-            			"/",
-            			"/springfox/**",
-            			"/version",
-            			"/sample");
-        
-        //@formatter:on
+    			"/v2/api-docs", 
+    			"/configuration/ui", 
+    			"/swagger-resources/**", 
+    			"/configuration/security", 
+    			"/swagger-ui.html", 
+    			"/webjars/**",
+    			"/csrf",
+    			"/",
+    			"/springfox/**",
+    			"/version",
+    			"/sample");
 	}
 
 	@Bean

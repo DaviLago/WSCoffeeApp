@@ -45,18 +45,15 @@ public class AuthenticationController {
 
 	@PostMapping(path = { "/auth" })
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-		log.info("CreateAuthenticationToken Method of Class AuthenticationController %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		Authentication auth = null;
 
 		if (StringUtils.isBlank(authenticationRequest.getEmail()) || StringUtils.isBlank(authenticationRequest.getPassword())) {
-//			throw new CerberonAuthenticationException("err.authentication.invalid.userpass");
 			throw new Exception("err.authentication.invalid.userpass");
 		}
 
 		auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
 
 		final String token = authenticationTokenService.generateToken((SecurityPrincipal) auth.getPrincipal());
-		log.info("Token {} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", token);
 		return ResponseEntity.ok(new AuthenticationResponse(token));
 	}
 	
@@ -78,7 +75,6 @@ public class AuthenticationController {
 
 	@ExceptionHandler({ AuthenticationException.class })
 	public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
-		log.info("handleAuthenticationException Method of Class AuthenticationController %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(getErrorMessageFromException(e));
 	}
 
@@ -97,10 +93,6 @@ public class AuthenticationController {
 			return "err.authentication.username.not.found";
 		} else if (exception.getClass().isAssignableFrom(AuthenticationCredentialsNotFoundException.class)) {
 			return "err.authentication.credential.not.found";
-//		} else if (exception.getClass().isAssignableFrom(SessionUnavaiableException.class)) {
-//			return "err.authentication.session.unavailable";
-//		} else if (exception.getClass().isAssignableFrom(ChangePasswordNextLoginException.class)) {
-//			return "err.authentication.changepassword.required";
 //		} else if (exception.getClass().isAssignableFrom(ExpiredLicenseException.class)) {
 //			return "err.license.expired";
 		} else {

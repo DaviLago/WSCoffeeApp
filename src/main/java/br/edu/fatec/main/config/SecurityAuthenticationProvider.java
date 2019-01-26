@@ -30,7 +30,6 @@ public class SecurityAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) {
-		log.info("Authenticate Method of Class SecurityAuthenticationProvider %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		SecurityPrincipal principal = null;
 		Optional<UserModel> user = null;
 		if (authentication.getPrincipal() instanceof SecurityPrincipal) {
@@ -50,20 +49,10 @@ public class SecurityAuthenticationProvider implements AuthenticationProvider {
 			principal = new SecurityPrincipal(user.get());
 		}
 		
-//		if (!user.get().getEnabled()) {
-//			throw new DisabledException(user.get().getUserName());
-//		}
-
-//		List<GrantedAuthority> grantedAuths = new ArrayList<>();
-//		for (SecurityRole role : userService.getRoles(user.get())) {
-//			grantedAuths.add(new SimpleGrantedAuthority(role.getRoleName()));
-//		}
-
 		return new UsernamePasswordAuthenticationToken(principal, null);
 	}
 
 	private void validatePassword(String password, UserModel user) {
-		log.info("TRY validatePassword Method of Class SecurityAuthenticationProvider %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		if (!passwordEncoder.matches(password, user.getPassword())) {
 			throw new BadCredentialsException(user.getName());
 		}

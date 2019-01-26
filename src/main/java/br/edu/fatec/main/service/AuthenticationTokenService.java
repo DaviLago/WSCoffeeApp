@@ -11,7 +11,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,10 +41,10 @@ public class AuthenticationTokenService {
 
 	private Long expiration = 86400L; // 24hrs em segundos
 
-	@Scheduled(cron = "0 0/5 * * * ?")
-	protected void cleanExpiredToken() {
+//	@Scheduled(cron = "0 0/5 * * * ?")
+//	protected void cleanExpiredToken() {
 //		authenticationTokenRepository.deleteExpiredTokens(new Date());
-	}
+//	}
 
 	public String generateToken(SecurityPrincipal principal) {
 
@@ -55,7 +54,6 @@ public class AuthenticationTokenService {
 
 		Clock clock = DefaultClock.INSTANCE;
 		SecretKey secretKey = MacProvider.generateKey(SIGNATUREALGORITHM);
-		log.info("Token Key: {} %%%%%%%%%%%%%%%%%%%%%%%%", secretKey);
 		final Date createdDate = clock.now();
 		final Date expirationDate = calculateExpirationDate(createdDate);
 
@@ -83,12 +81,10 @@ public class AuthenticationTokenService {
 		String tokenId = parsedUnsec.getBody().getId();
 		if (StringUtils.isBlank(tokenId))
 			throw new Exception("InvalidTokenException");
-//			throw new InvalidTokenException();
 
 		AuthenticationToken authenticationToken = authenticationTokenRepository.findOneByTokenId(tokenId);
 		if (authenticationToken == null)
 			throw new Exception("InvalidTokenException");
-//			throw new InvalidTokenException();
 
 		// Verify that the token is properly signed
 		Jwts.parser().setSigningKey(authenticationToken.getTokenKey()).parseClaimsJws(authToken);
@@ -102,7 +98,6 @@ public class AuthenticationTokenService {
 
 	private void save(AuthenticationToken authenticationToken) {
 		authenticationTokenRepository.save(authenticationToken);
-
 	}
 
 }
