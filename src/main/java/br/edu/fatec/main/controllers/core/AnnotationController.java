@@ -40,6 +40,15 @@ public class AnnotationController extends AuthenticationSecurityPrincipal {
 		return new ResponseEntity<>(annotationService.findAnnotationByUserId(user.getUser().getId()), HttpStatus.OK);
     }
 	
+	@GetMapping("{annotationId}")
+    public ResponseEntity<Annotation> findAnnotationById(@PathVariable String annotationId, HttpServletRequest request) {
+		SecurityPrincipal user = getSecurityPrincipal();
+		Optional<Annotation> oAnnotation = annotationService.findAnnotationByIdAndUserId(annotationId, user.getUser().getId());
+		if(oAnnotation.isPresent())
+			return new ResponseEntity<>(oAnnotation.get(), HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+	
 	@PostMapping
 	public ResponseEntity<Annotation> save(@RequestBody AnnotationModel annotation, HttpServletRequest request) {
 		SecurityPrincipal user = getSecurityPrincipal();

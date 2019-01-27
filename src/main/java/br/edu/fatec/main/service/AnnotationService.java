@@ -48,5 +48,9 @@ public class AnnotationService {
 		return annotationRepository.findByIdAndUserId(annotationId, userId);
 	}
 	
+	public Optional<Annotation> findAnnotationByIdAndUserId(String annotationId, String userId) {
+		return annotationRepository.findAnnotationByIdAndUserId(annotationId, userId);
+	}
+	
 	
 }

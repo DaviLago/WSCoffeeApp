@@ -16,4 +16,6 @@ public interface AnnotationRepository extends MongoRepository<AnnotationModel, S
 
 	List<Annotation> findAnnotationByUserId(String userId);
 
+	Optional<Annotation> findAnnotationByIdAndUserId(String annotationId, String userId);
+
 }
