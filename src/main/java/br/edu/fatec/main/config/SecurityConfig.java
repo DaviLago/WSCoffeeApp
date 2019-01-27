@@ -76,6 +76,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     			"/version",
     			"/sample");
 	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() { 
+		return new BCryptPasswordEncoder();
+	}
 
 	@Bean
 	@Override
@@ -83,9 +88,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 	
-	@Bean
-	public PasswordEncoder passwordEncoder() { 
-		return new BCryptPasswordEncoder();
-	}
-
 }
