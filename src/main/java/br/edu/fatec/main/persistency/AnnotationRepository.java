@@ -6,11 +6,14 @@ import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import br.edu.fatec.main.model.AnnotationModel;
+import br.edu.fatec.main.transients.Annotation;
 
 public interface AnnotationRepository extends MongoRepository<AnnotationModel, String> {
 
 	List<AnnotationModel> findByUserId(String userId);
 
 	Optional<AnnotationModel> findByIdAndUserId(String annotationId, String userId);
+
+	List<Annotation> findAnnotationByUserId(String userId);
 
 }

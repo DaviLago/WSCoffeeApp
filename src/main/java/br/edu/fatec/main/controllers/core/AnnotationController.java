@@ -1,6 +1,7 @@
 package br.edu.fatec.main.controllers.core;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,12 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.fatec.main.model.AnnotationModel;
 import br.edu.fatec.main.model.SecurityPrincipal;
+import br.edu.fatec.main.model.UserModel;
 import br.edu.fatec.main.service.AnnotationService;
 import br.edu.fatec.main.service.UserService;
+import br.edu.fatec.main.transients.Annotation;
 
 @RestController
 @RequestMapping(value = "/v1/annotation")
-public class AnnotationController {
+public class AnnotationController extends AuthenticationSecurityPrincipal {
 	
 	@Autowired
 	private AnnotationService annotationService;
@@ -31,71 +34,38 @@ public class AnnotationController {
 	@Autowired
 	private UserService userService;
 	
-//	@Deprecated
-//	@GetMapping("/{userId}/annotation") 
-//    public ResponseEntity<List<AnnotationModel>> findByUserId(@PathVariable String userId) {
-//		return new ResponseEntity<>(annotationService.findByUserId(userId), HttpStatus.OK);
-//    }
-	
-	@GetMapping 
-    public ResponseEntity<List<AnnotationModel>> findAnnotationByUser(HttpServletRequest request) {
-		SecurityPrincipal user = (SecurityPrincipal) request.getUserPrincipal();
-		return new ResponseEntity<>(annotationService.findByUserId(user.getUser().getId()), HttpStatus.OK);
+	@GetMapping
+    public ResponseEntity<List<Annotation>> findAnnotationByUser(HttpServletRequest request) {
+		SecurityPrincipal user = getSecurityPrincipal();
+		return new ResponseEntity<>(annotationService.findAnnotationByUserId(user.getUser().getId()), HttpStatus.OK);
     }
 	
-//	@Deprecated
-//	@PostMapping("/{userId}/annotation")
-//	public ResponseEntity<AnnotationModel> saveD(@PathVariable String userId, @RequestBody AnnotationModel annotation) {
-//		if(userService.findById(userId).isPresent())
-//			return new ResponseEntity<AnnotationModel>(annotationService.save(annotation), HttpStatus.CREATED);
-//		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//	}
-	
 	@PostMapping
-	public ResponseEntity<AnnotationModel> save(@RequestBody AnnotationModel annotation, HttpServletRequest request) {
-		SecurityPrincipal user = (SecurityPrincipal) request.getUserPrincipal();
-		if(userService.findById(user.getUser().getId()).isPresent()) {
-			annotation.setUser(user.getUser());
-			return new ResponseEntity<AnnotationModel>(annotationService.save(annotation), HttpStatus.CREATED);
+	public ResponseEntity<Annotation> save(@RequestBody AnnotationModel annotation, HttpServletRequest request) {
+		SecurityPrincipal user = getSecurityPrincipal();
+		Optional<UserModel> oUserModel = userService.findById(user.getUser().getId());
+		if(oUserModel.isPresent()) {
+			annotation.setUser(oUserModel.get());
+			return new ResponseEntity<>(annotationService.saveAnnotation(annotation), HttpStatus.CREATED);
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
-//	@Deprecated
-//	@PutMapping("/{userId}/annotation/{annotationId}")
-//	public ResponseEntity<AnnotationModel> updateD(@PathVariable String userId, @PathVariable String annotationId, @RequestBody AnnotationModel annotation) {
-//		if(annotationService.findByIdAndUserId(annotationId, userId).isPresent()) {
-//			annotation.setId(annotationId);
-//			annotationService.save(annotation);
-//			return new ResponseEntity<>(annotationService.save(annotation), HttpStatus.OK);
-//		}
-//		return new ResponseEntity<AnnotationModel>(new AnnotationModel(), HttpStatus.BAD_REQUEST);
-//	}
-	
 	@PutMapping("{annotationId}")
-	public ResponseEntity<AnnotationModel> update(@PathVariable String annotationId, @RequestBody AnnotationModel annotation, HttpServletRequest request) {
-		SecurityPrincipal user = (SecurityPrincipal) request.getUserPrincipal();
-		if(annotationService.findByIdAndUserId(annotationId, user.getUser().getId()).isPresent()) {
-			annotation.setId(annotationId);
-			annotationService.save(annotation);
-			return new ResponseEntity<>(annotationService.save(annotation), HttpStatus.OK);
+	public ResponseEntity<Annotation> update(@PathVariable String annotationId, @RequestBody AnnotationModel annotation, HttpServletRequest request) {
+		SecurityPrincipal user = getSecurityPrincipal();
+		Optional<AnnotationModel> oAnnotation = annotationService.findByIdAndUserId(annotationId, user.getUser().getId());
+		if(oAnnotation.isPresent()) {
+			annotation.setId(oAnnotation.get().getId());
+			annotation.setUser(oAnnotation.get().getUser());
+			return new ResponseEntity<>(annotationService.saveAnnotation(annotation), HttpStatus.OK);
 		}
-		return new ResponseEntity<AnnotationModel>(new AnnotationModel(), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
-//	@Deprecated
-//	@DeleteMapping("/{userId}/annotation/{annotationId}")
-//	public ResponseEntity<AnnotationModel> deleteD(@PathVariable String userId, @PathVariable String annotationId){
-//		if(annotationService.findByIdAndUserId(annotationId, userId).isPresent()) {
-//			annotationService.delete(annotationService.findById(annotationId).get());
-//			return new ResponseEntity<>(HttpStatus.OK);
-//		}
-//		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//	}
-	
 	@DeleteMapping("{annotationId}")
-	public ResponseEntity<AnnotationModel> delete(@PathVariable String annotationId, HttpServletRequest request){
-		SecurityPrincipal user = (SecurityPrincipal) request.getUserPrincipal();
+	public ResponseEntity<Annotation> delete(@PathVariable String annotationId, HttpServletRequest request){
+		SecurityPrincipal user = getSecurityPrincipal();
 		if(annotationService.findByIdAndUserId(annotationId, user.getUser().getId()).isPresent()) {
 			annotationService.delete(annotationService.findById(annotationId).get());
 			return new ResponseEntity<>(HttpStatus.OK);
