@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.edu.fatec.main.model.UserModel;
 import br.edu.fatec.main.persistency.UserRepository;
+import br.edu.fatec.main.transients.User;
 
 @Service
 public class UserService {
@@ -31,7 +32,11 @@ public class UserService {
 	public Optional<UserModel> findById(String id) {
 		return userRepository.findById(id);
 	}
-
+	
+	public Optional<User> findUserById(String id) {
+		return userRepository.findUserById(id);
+	}
+	
 	public List<UserModel> findAll() {
 		return userRepository.findAll();
 	}
