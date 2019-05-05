@@ -1,4 +1,4 @@
-package br.edu.fatec.main.config;
+package br.edu.fatec.main.controllers.authentication;
 
 import java.io.IOException;
 

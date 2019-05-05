@@ -15,7 +15,7 @@ import br.edu.fatec.main.transients.User;
 public class UserService {
 	
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;

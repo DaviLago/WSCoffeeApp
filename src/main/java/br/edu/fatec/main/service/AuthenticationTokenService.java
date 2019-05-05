@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.edu.fatec.main.config.AuthSuccessHandler;
+import br.edu.fatec.main.controllers.authentication.AuthSuccessHandler;
 import br.edu.fatec.main.model.AuthenticationToken;
 import br.edu.fatec.main.model.SecurityPrincipal;
 import br.edu.fatec.main.model.UserModel;
@@ -32,7 +32,7 @@ import io.jsonwebtoken.impl.crypto.MacProvider;
 @Transactional
 public class AuthenticationTokenService {
 	
-	Logger log = LoggerFactory.getLogger(AuthSuccessHandler.class);
+	private Logger log = LoggerFactory.getLogger(AuthSuccessHandler.class);
 	
 	private static final SignatureAlgorithm SIGNATUREALGORITHM = SignatureAlgorithm.HS512;
 

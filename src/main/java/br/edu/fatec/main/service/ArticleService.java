@@ -14,7 +14,7 @@ import br.edu.fatec.main.persistency.ArticleRepository;
 public class ArticleService {
 	
 	@Autowired
-	ArticleRepository articleRepository;
+	private ArticleRepository articleRepository;
 	
 	public ArticleModel save(ArticleModel article) {
 		return articleRepository.save(article);

@@ -15,7 +15,7 @@ import br.edu.fatec.main.transients.Annotation;
 public class AnnotationService {
 	
 	@Autowired
-	AnnotationRepository annotationRepository;
+	private AnnotationRepository annotationRepository;
 
 	public Annotation saveAnnotation(AnnotationModel annotationModel) {
 		annotationModel = annotationRepository.save(annotationModel);

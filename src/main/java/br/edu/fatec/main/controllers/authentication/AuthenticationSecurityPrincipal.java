@@ -1,4 +1,4 @@
-package br.edu.fatec.main.controllers.core;
+package br.edu.fatec.main.controllers.authentication;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

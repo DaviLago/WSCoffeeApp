@@ -14,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import br.edu.fatec.main.controllers.authentication.AuthorizationTokenFilter;
+import br.edu.fatec.main.controllers.authentication.SecurityAuthenticationProvider;
+import br.edu.fatec.main.controllers.authentication.UnauthorizedAuthenticationEntryPoint;
 import br.edu.fatec.main.service.AuthenticationTokenService;
 
 @Configuration

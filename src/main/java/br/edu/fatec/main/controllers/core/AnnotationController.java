@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.fatec.main.controllers.authentication.AuthenticationSecurityPrincipal;
 import br.edu.fatec.main.model.AnnotationModel;
 import br.edu.fatec.main.model.SecurityPrincipal;
 import br.edu.fatec.main.model.UserModel;
