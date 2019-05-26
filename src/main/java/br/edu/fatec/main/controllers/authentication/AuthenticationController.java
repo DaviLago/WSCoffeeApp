@@ -58,7 +58,7 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping(path = { "/auth/user" })
-	public ResponseEntity<User> save(@RequestBody UserModel user) {
+	public ResponseEntity<?> save(@RequestBody UserModel user) {
 		if(user.getName() == null || user.getEmail() == null || user.getPassword() == null)
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		else if(user.getName().trim().isEmpty() || user.getEmail().trim().isEmpty() || user.getPassword().trim().isEmpty())
@@ -70,7 +70,7 @@ public class AuthenticationController {
 		user = userService.save(user);
 		Authentication auth = new UsernamePasswordAuthenticationToken(new SecurityPrincipal(user), null);
 		final String token = authenticationTokenService.generateToken((SecurityPrincipal) auth.getPrincipal());
-		return new ResponseEntity<>(user, HttpStatus.CREATED);
+		return new ResponseEntity<>(new AuthenticationResponse(token), HttpStatus.CREATED);
 	}
 
 	@ExceptionHandler({ AuthenticationException.class })
